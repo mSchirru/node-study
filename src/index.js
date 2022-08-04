@@ -7,7 +7,7 @@ app.use(express.json());
 
 customers = [];
 
-app.get("/account", (request, response) => {
+app.post("/account", (request, response) => {
     const {name, cpf} = request.body;
     const id = uuidv4();
 
@@ -25,11 +25,17 @@ app.get("/account", (request, response) => {
         id,
         statement: []
     };
-
     
-
     customers.push(customer);
     return response.status(201).send();
 })
+
+app.get("/statement/:cpf", (request, response) => {
+    const { cpf } = request.params;
+
+    const customer = customers.find((customer) => customer.cpf === cpf);
+
+    return response.json(customer.statement);
+});
 
 app.listen(3333);
